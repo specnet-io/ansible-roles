@@ -1,0 +1,17 @@
+---
+- name: install packages
+  apt:
+    name:
+      - freeipa-client
+      - chrony
+    state: present
+    update_cache: yes
+  become: true
+
+- name: ubuntu specific tasks
+  include_tasks: distro-ubuntu.yml
+  when: ansible_facts['distribution'] == 'Ubuntu'
+
+- name: debian specific tasks
+  include_tasks: distro-debian.yml
+  when: ansible_facts['distribution'] == 'Debian'

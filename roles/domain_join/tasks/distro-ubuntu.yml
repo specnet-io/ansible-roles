@@ -1,0 +1,38 @@
+---
+- name: primary nic
+  set_fact:
+    primary_iface: "{{ ansible_default_ipv4.interface }}"
+
+- name: set dns via netplan
+  template:
+    src: netplan.yml.j2
+    dest: "/etc/netplan/99-specnet-{{ site }}-dns.yml"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: apply netplan
+
+- name: clear existing ntp servers
+  lineinfile:
+    path: /etc/chrony/chrony.conf
+    regexp: '^server '
+    state: absent
+
+- name: add new dns servers
+  lineinfile:
+    path: /etc/chrony/chrony.conf
+    line: "server {{ item }} iburst"
+  loop: "{{ ntp_servers }}"
+  notify: restart chrony
+
+- name: join domain
+  command: >
+    ipa-client-install
+      --unattended
+      --domain={{ ipa_domain }}
+      --realm={{ ipa_realm }}
+      --principal={{ ipa_principal }}
+      --password={{ ipa_password }}
+      --mkhomedir
+    args:
+      creates: /etc/ipa/default.conf

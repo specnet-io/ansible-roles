@@ -1,0 +1,15 @@
+---
+ntp_servers:
+  - "{{ specnet_dns_primary }}"
+  - "{{ specnet_dns_secondary }}"
+dns_servers:
+  - "{{ specnet_dns_primary }}"
+  - "{{ specnet_dns_secondary }}"
+dns_search:
+  - "{{ specnet_dns_search }}"
+ipa_domain: "{{ specnet_ipa_domain }}"
+ipa_realm: "{{ specnet_ipa_domain | upper }}"
+ipa_principal: "{{ specnet_ipa_joiner_account }}"
+ipa_password: "{{ specnet_ipa_joiner_pw }}"
+supported_os: "{{ specnet_supported_debian_os + specnet_supported_redhat_os }}"
+site: "{{ specnet_site }}"

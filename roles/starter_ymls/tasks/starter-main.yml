@@ -1,0 +1,15 @@
+- name: verify os is supported
+  assert:
+    that:
+      - ansible_facts['distribution] in supported_os
+    fail_msg: >
+      Unsupported OS {{ ansible_facts['distribution'] }}.
+      Supported Distros are: {{ supported_os | join(', ') }}
+
+- name: execute debian-family tasks
+  include_tasks: family-debian.yml
+  when: ansible_facts['distribution'] in specnet_supported_debian_os
+
+- name: execute redhat-family tasks
+  include_tasks: family-redhat.yml
+  when: ansible_facts['distribution'] in specnet_supported_redhat_os

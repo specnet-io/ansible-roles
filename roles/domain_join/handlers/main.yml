@@ -1,0 +1,8 @@
+---
+- name: apply netplan
+  command: netplan apply
+
+- name: restart chrony
+  service:
+    name: chronyd
+    state: restarted

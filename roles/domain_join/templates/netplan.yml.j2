@@ -1,0 +1,10 @@
+network:
+  version: 2
+  ethernets:
+    {{ primary_iface }}:
+      nameservers:
+        search: {{ dns_search }}
+        addresses:
+{% for ns in dns_servers %}
+          - {{ ns }}
+{% endfor %}
